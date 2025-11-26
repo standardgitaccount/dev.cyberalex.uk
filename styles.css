@@ -185,3 +185,9 @@ code {
     padding: 24px 16px;
   }
 }
+
+.search-area .result-heading {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
