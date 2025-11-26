@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Zilchy.link – Almost No Link</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Zilchy.link – tiny, hand-crafted short links. Almost no link." />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page page-center">
+  <main class="shell">
+    <header class="brand">
+      <div class="logo-circle">Z</div>
+      <div>
+        <h1>Zilchy.link</h1>
+        <p class="tagline">Almost no link.</p>
+      </div>
+    </header>
+
+    <section class="search-area">
+      <form id="lookupForm" autocomplete="off">
+        <input
+          id="codeInput"
+          type="text"
+          inputmode="latin"
+          spellcheck="false"
+          placeholder="Enter your Zilchy code or URL (e.g. h24m or https://zilchy.link/h24m)"
+          aria-label="Enter a Zilchy short code or URL"
+        />
+        <div class="button-row">
+          <button type="submit" class="btn-primary">Go</button>
+          <a href="create.html" class="btn-secondary">Create a new link</a>
+        </div>
+      </form>
+      <p class="hint">
+        Zilchy codes are 4 characters long &nbsp;·&nbsp; numbers and letters &nbsp;·&nbsp; not case sensitive
+      </p>
+    </section>
+
+    <footer class="footer">
+      <small>© <span id="year"></span> Zilchy.link · Hand-curated short links</small>
+    </footer>
+  </main>
+
+  <script>
+    // Set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('lookupForm');
+    const input = document.getElementById('codeInput');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const raw = (input.value || '').trim();
+      if (!raw) return;
+
+      // Accept either a full Zilchy URL or just the 4-char code
+      let code = raw;
+
+      try {
+        // If it's a URL, extract pathname segment after /
+        if (raw.startsWith('http://') || raw.startsWith('https://')) {
+          const u = new URL(raw);
+          const parts = u.pathname.replace(/^\/+/, '').split('/');
+          code = parts[0] || '';
+        } else if (raw.includes('/')) {
+          // Something like zilchy.link/h24m without protocol
+          const parts = raw.split('/');
+          code = parts[parts.length - 1];
+        }
+      } catch (err) {
+        // ignore, just treat as raw code
+      }
+
+      code = code.toLowerCase().replace(/[^0-9a-z]/g, '');
+
+      if (!code || code.length !== 4) {
+        alert('Please enter a valid 4-character Zilchy code.');
+        return;
+      }
+
+      // Navigate to the short URL; 404.html will do the redirect.
+      window.location.href = '/' + code;
+    });
+  </script>
+</body>
+</html>
