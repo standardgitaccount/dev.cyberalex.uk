@@ -11,7 +11,7 @@ URLS_PATH = pathlib.Path("urls.json")
 BANNED_SUBSTRINGS = [
     # Adult
     "porn", "xxx", "sex", "xvideos", "xnxx", "redtube", "pornhub",
-    "onlyfans", "camgirl", "cam4",
+    "onlyfans", "camgirl", "cam4", 
     # Gambling
     "casino", "bet365", "betfair", "poker", "slots", "bookmaker", "1xbet",
     # Basic spammy stuff (tweak as you like)
