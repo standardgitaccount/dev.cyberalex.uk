@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import json
+import os
 import pathlib
 import re
+import subprocess
 import sys
 
 URLS_PATH = pathlib.Path("urls.json")
@@ -18,28 +20,77 @@ BANNED_SUBSTRINGS = [
 
 MAX_CODE_LENGTH = 64
 
+
+def load_json_text(path: pathlib.Path) -> tuple[str, dict]:
+    raw = path.read_text(encoding="utf-8")
+    data = json.loads(raw)
+    if not isinstance(data, dict):
+        raise ValueError("Top-level JSON must be an object (code → URL).")
+    return raw, data
+
+
+def load_base_urls() -> dict | None:
+    """
+    Load urls.json from the base branch (e.g. origin/main) so we can
+    detect attempts to modify or remove existing codes.
+    """
+    base_ref = os.environ.get("GITHUB_BASE_REF")
+    if not base_ref:
+        # Not a pull_request context, or no base ref – skip this check.
+        return None
+
+    ref = f"origin/{base_ref}:urls.json"
+    try:
+        result = subprocess.run(
+            ["git", "show", ref],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        # urls.json might not exist yet on base; nothing to compare.
+        return None
+
+    try:
+        data = json.loads(result.stdout)
+    except Exception:
+        return None
+
+    if not isinstance(data, dict):
+        return None
+
+    return data
+
+
 def main() -> int:
     try:
-        raw = URLS_PATH.read_text(encoding="utf-8")
+        raw, data = load_json_text(URLS_PATH)
     except FileNotFoundError:
         print("❌ urls.json not found in repo root.")
         return 1
-
-    try:
-        data = json.loads(raw)
     except Exception as e:
-        print("❌ urls.json is not valid JSON:")
-        print("   ", e)
-        return 1
-
-    if not isinstance(data, dict):
-        print("❌ urls.json must contain a JSON object (key → URL).")
+        print("❌ Failed to parse urls.json:", e)
         return 1
 
     errors: list[str] = []
 
+    # ---- Canonical formatting check ----
+    formatted = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False)
+    if not formatted.endswith("\n"):
+        formatted += "\n"
+
+    if raw != formatted:
+        errors.append(
+            "urls.json is not in canonical format "
+            "(sorted keys, 2-space indent, trailing newline)."
+        )
+        print("ℹ️ Suggested canonical formatting for urls.json:")
+        print()
+        print(formatted)
+
+    # ---- Validate individual entries ----
     for code, url in data.items():
-        # ---- validate code ----
+        # Code validation
         if not isinstance(code, str):
             errors.append(f"Key {code!r} is not a string.")
             continue
@@ -60,7 +111,7 @@ def main() -> int:
                 f"Code {code!r} is too long (>{MAX_CODE_LENGTH} characters)."
             )
 
-        # ---- validate URL ----
+        # URL validation
         if not isinstance(url, str):
             errors.append(f"Value for code {code!r} is not a string.")
             continue
@@ -80,16 +131,10 @@ def main() -> int:
                 )
                 break
 
-    if errors:
-        print("❌ urls.json failed validation. Problems found:")
-        for e in errors:
-            print("  -", e)
-        print("\nPlease fix these before merging this pull request.")
-        return 1
-
-    print("✅ urls.json passed validation.")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+    # ---- Block modifying/removing existing codes ----
+    base_data = load_base_urls()
+    if base_data is not None:
+        for code, base_url in base_data.items():
+            if code not in data:
+                errors.append(
+                    f"Code {code!r} exists on the base branch but is missing "
