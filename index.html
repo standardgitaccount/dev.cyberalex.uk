@@ -784,26 +784,14 @@
       }, 150);
     });
 
-    /* Back to input button (mobile-only via CSS) */
+      /* Back to input button (mobile-only via CSS) */
     if (backToInputBtn) {
       backToInputBtn.addEventListener("click", () => {
-        const targetY = 0; // scroll to top where the main box is
-        window.scrollTo({ top: targetY, behavior: "smooth" });
-
-        // refocus input shortly after scroll
-        setTimeout(() => {
-          input.focus({ preventScroll: true });
-        }, 400);
+        // Full page refresh – returns to clean home state
+        window.location.reload();
       });
     }
 
-    // Back button simply reloads the page
-const backToSearchBtn = document.getElementById('backToSearchBtn');
-if (backToSearchBtn) {
-  backToSearchBtn.addEventListener('click', () => {
-    window.location.reload();
-  });
-}
 
   </script>
 </body>
