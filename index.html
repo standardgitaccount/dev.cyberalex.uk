@@ -3,10 +3,14 @@
 <head>
   <meta charset="utf-8" />
 
-  <!-- Icons: make sure these files exist at the repo root -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
-  <link rel="apple-touch-icon" href="/icon.png">
+  <!-- Favicon: inline SVG using the Z logo, no separate file required -->
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Ccircle%20cx='32'%20cy='32'%20r='30'%20fill='%235bffea'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-size='32'%20font-family='system-ui,%20sans-serif'%20fill='%23020617'%20font-weight='700'%3EZ%3C/text%3E%3C/svg%3E"
+  >
+
+  <!-- Manifest stays if you want PWA support later -->
   <link rel="manifest" href="/manifest.json">
 
   <title>Zilchy.link – Almost no link</title>
@@ -413,6 +417,39 @@
           rgba(255,255,255,0) 70%
         );
     }
+
+    /* BACK BUTTON (mobile only) */
+    .btn-back {
+      margin: 18px auto 0;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: block;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
+      transition: background 0.12s, transform 0.12s, box-shadow 0.12s;
+    }
+
+    .btn-back:hover {
+      background: rgba(30, 64, 175, 0.9);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-back:active {
+      transform: translateY(1px);
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+    }
+
+    /* Hide back button on bigger screens */
+    @media (min-width: 768px) {
+      .btn-back {
+        display: none;
+      }
+    }
   </style>
 
 </head>
@@ -491,7 +528,7 @@
       <h3 class="result-subheading">Edit this file on GitHub</h3>
       <p>
         <a href="https://github.com/standardgitaccount/dev.cyberalex.uk/blob/main/urls.json" target="_blank">
-          Github - urls.json
+          //urls.json
         </a>
       </p>
 
@@ -507,6 +544,11 @@
       <p class="hint">
         The new Zilchy link will work after the pages deploy, typically less than 60 seconds.
       </p>
+
+      <!-- MOBILE-ONLY BACK BUTTON -->
+      <button type="button" class="btn-back" id="backToInput">
+        Back to input
+      </button>
     </section>
 
     <footer class="footer">
@@ -522,6 +564,7 @@
     const input = document.getElementById('mainInput');
     const goBtn = document.getElementById('goBtn');
     const resultPanel = document.getElementById('resultPanel');
+    const backToInputBtn = document.getElementById('backToInput');
 
     const longUrlDisplay = document.getElementById('longUrlDisplay');
     const codeOut = document.getElementById('codeOut');
@@ -739,6 +782,19 @@
         input.focus({ preventScroll: true });
       }, 150);
     });
+
+    /* Back to input button (mobile-only via CSS) */
+    if (backToInputBtn) {
+      backToInputBtn.addEventListener("click", () => {
+        const targetY = 0; // scroll to top where the main box is
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+
+        // refocus input shortly after scroll
+        setTimeout(() => {
+          input.focus({ preventScroll: true });
+        }, 400);
+      });
+    }
   </script>
 </body>
 </html>
