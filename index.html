@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
 
-  <!-- Favicon: inline SVG using the Z logo, no separate file required -->
-  <link
-    rel="icon"
-    type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Ccircle%20cx='32'%20cy='32'%20r='30'%20fill='%235bffea'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-size='32'%20font-family='system-ui,%20sans-serif'%20fill='%23020617'%20font-weight='700'%3EZ%3C/text%3E%3C/svg%3E"
-  >
+  <!-- SVG favicon (modern browsers) -->
+  <link rel="icon" type="image/svg+xml" href="/zilchy-icon.svg">
+  
+  <!-- PNG fallbacks (optional but nice to have if you export the PNG)
+  <link rel="icon" type="image/png" sizes="192x192" href="/zilchy-icon-192.png">
+  <link rel="apple-touch-icon" href="/zilchy-icon-192.png"> -->
+
 
   <!-- Manifest stays if you want PWA support later -->
   <link rel="manifest" href="/manifest.json">
