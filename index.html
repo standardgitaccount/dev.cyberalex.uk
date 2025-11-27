@@ -154,7 +154,13 @@
       margin-bottom: 18px;
     }
 
-    /* Inputs */
+    /* INPUT + BUTTON ROW */
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     #mainForm input {
       width: 100%;
       padding: 12px 14px;
@@ -165,6 +171,7 @@
       font-size: 0.95rem;
       outline: none;
       transition: border-color 0.18s, box-shadow 0.18s, background 0.18s, transform 0.12s;
+      flex: 1 1 auto;
     }
 
     #mainForm input::placeholder {
@@ -210,12 +217,6 @@
     }
 
     /* Buttons */
-    .button-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
     .btn-primary {
       flex: 0 0 auto;
       padding: 10px 20px;
@@ -230,6 +231,7 @@
         0 0 0 1px rgba(148, 163, 184, 0.4),
         0 12px 28px rgba(34, 211, 238, 0.7);
       transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s;
+      white-space: nowrap;
     }
 
     .btn-primary:hover {
@@ -344,20 +346,20 @@
     <!-- MAIN INPUT -->
     <section class="search-area">
       <form id="mainForm" autocomplete="off">
-        <input
-          id="mainInput"
-          type="text"
-          inputmode="latin"
-          placeholder="Enter a code (e.g. h24m or securesme) or paste a long URL"
-        />
-
-        <div class="button-row">
+        <div class="input-row">
+          <input
+            id="mainInput"
+            type="text"
+            inputmode="latin"
+            placeholder="Enter a code (e.g. h24m or securesme) or paste a long URL"
+          />
           <button type="submit" class="btn-primary" id="goBtn">Go</button>
         </div>
       </form>
 
       <p class="hint">
-        Default codes are 4 characters · you can also choose a custom code (letters + numbers, any length).
+        Zilchy.link is a private, invite-only short-link service. Links are hand-curated for reliability and safety.
+        Default codes are 4 characters long, and you can also choose a custom code (letters + numbers, any length).
       </p>
     </section>
 
