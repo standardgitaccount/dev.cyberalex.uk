@@ -2,17 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- FAVICONS / APP ICONS -->
-  <!-- 32px+64px for browser tabs -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/z-32.png">
-  <link rel="icon" type="image/png" sizes="64x64" href="/icons/z-64.png">
-  <!-- Fallback favicon.ico if you want -->
-  <link rel="icon" href="/favicon.ico">
 
-  <!-- iOS / Android app icon -->
-  <link rel="apple-touch-icon" href="/icons/z-192.png">
+  <!-- Icons: make sure these files exist at the repo root -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+  <link rel="apple-touch-icon" href="/icon.png">
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#020313">
 
   <title>Zilchy.link – Almost no link</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,8 +20,8 @@
       --border-subtle: rgba(148, 163, 184, 0.4);
       --text-main: #f9fbff;
       --text-muted: #9ca3af;
-      --accent: #5bffea;          /* neon cyan */
-      --accent-alt: #ff4ce3;      /* neon magenta */
+      --accent: #5bffea;
+      --accent-alt: #ff4ce3;
       --accent-soft: rgba(91, 255, 234, 0.22);
       --radius-lg: 18px;
       --shadow-soft: 0 18px 60px rgba(0, 0, 0, 0.85);
@@ -56,12 +51,12 @@
       overflow-x: hidden;
     }
 
-    /* Neon grid background */
+    /* Neon pipes background */
     body.page::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -2;
+      z-index: -1;
       background-image:
         repeating-linear-gradient(
           90deg,
@@ -84,26 +79,6 @@
       filter: blur(0.4px);
     }
 
-    /* subtle mouse glow overlay */
-    #distort-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      background-position: center;
-      mix-blend-mode: screen;
-      transition: background 0.18s ease-out;
-    }
-
-    body.mousemove #distort-overlay {
-      background-image:
-        radial-gradient(
-          circle 180px at var(--mx) var(--my),
-          rgba(91,255,234,0.12) 0%,
-          rgba(255,255,255,0) 70%
-        );
-    }
-
     .page-center {
       display: flex;
       align-items: center;
@@ -114,12 +89,7 @@
       width: 100%;
       max-width: 680px;
       margin: 0 auto;
-      padding: 32px 20px 24px;
-    }
-
-    /* top block = header + main box */
-    .top-block {
-      margin-bottom: 20px;
+      padding: 32px 20px;
     }
 
     /* Branding header */
@@ -127,7 +97,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
 
     .logo-circle {
@@ -374,13 +344,6 @@
       border: 1px solid rgba(15, 23, 42, 0.9);
     }
 
-    #longUrlDisplay {
-      display: block;
-      word-break: break-all;
-      white-space: normal;
-      line-height: 1.3;
-    }
-
     .snippet {
       margin: 0;
       padding: 10px 12px;
@@ -404,6 +367,15 @@
       margin-bottom: 6px;
     }
 
+    /* Long URL wrapping */
+    #longUrlDisplay {
+      display: block;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.3;
+    }
+
     /* Footer */
     .footer {
       margin-top: 18px;
@@ -422,29 +394,24 @@
       text-shadow: 0 0 6px rgba(255, 76, 227, 0.7);
     }
 
-    /* MOBILE / SMALL SCREENS */
-    @media (max-width: 800px) {
-      .shell {
-        padding-top: 18px;
-        padding-bottom: 20px;
-      }
+    /* Distortion overlay highlight */
+    #distort-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background-position: center;
+      mix-blend-mode: screen;
+      transition: background 0.18s ease-out;
+    }
 
-      /* header + main box stick together at the top,
-         but keep nice rounding and no weird overlaying */
-      .top-block {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        padding-top: 6px;
-        margin-bottom: 18px;
-        background:
-          radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 0.96), rgba(2, 3, 19, 0.98));
-        backdrop-filter: blur(10px);
-      }
-
-      .brand {
-        margin-bottom: 16px;
-      }
+    body.mousemove #distort-overlay {
+      background-image:
+        radial-gradient(
+          circle 180px at var(--mx) var(--my),
+          rgba(91,255,234,0.12) 0%,
+          rgba(255,255,255,0) 70%
+        );
     }
   </style>
 
@@ -452,35 +419,32 @@
 <body class="page page-center">
   <div id="distort-overlay"></div>
   <main class="shell">
-    <div class="top-block">
-      <header class="brand">
-        <div class="logo-circle">Z</div>
-        <div>
-          <h1>Zilchy.link</h1>
-          <p class="tagline">Almost no link.</p>
+    <header class="brand">
+      <div class="logo-circle">Z</div>
+      <div>
+        <h1>Zilchy.link</h1>
+        <p class="tagline">Almost no link.</p>
+      </div>
+    </header>
+
+    <!-- MAIN INPUT -->
+    <section class="search-area">
+      <form id="mainForm" autocomplete="off">
+        <input
+          id="mainInput"
+          type="text"
+          inputmode="latin"
+          placeholder="Enter The Code Provided..."
+        />
+        <div class="button-row">
+          <button type="submit" class="btn-primary" id="goBtn">Go</button>
         </div>
-      </header>
+      </form>
 
-      <!-- MAIN INPUT -->
-      <section class="search-area">
-        <form id="mainForm" autocomplete="off">
-          <input
-            id="mainInput"
-            type="text"
-            inputmode="latin"
-            placeholder="Enter The Code Provided..."
-          />
-
-          <div class="button-row">
-            <button type="submit" class="btn-primary" id="goBtn">Go</button>
-          </div>
-        </form>
-
-        <p class="hint">
-          Zilchy.link is a private, invite-only short-link service. Links are hand-curated for reliability and safety.
-        </p>
-      </section>
-    </div>
+      <p class="hint">
+        Zilchy.link is a private, invite-only short-link service. Links are hand-curated for reliability and safety.
+      </p>
+    </section>
 
     <!-- EXPANDING RESULT PANEL -->
     <section id="resultPanel" class="status" hidden>
@@ -762,14 +726,14 @@
       });
     });
 
-    /* mouse glow */
+    /* Distortion highlight */
     document.addEventListener("mousemove", (e) => {
       document.body.classList.add("mousemove");
       document.documentElement.style.setProperty("--mx", e.clientX + "px");
       document.documentElement.style.setProperty("--my", e.clientY + "px");
     });
 
-    /* focus the box on load without jumping mobile view */
+    /* Focus input on load without jumping */
     window.addEventListener("load", () => {
       setTimeout(() => {
         input.focus({ preventScroll: true });
