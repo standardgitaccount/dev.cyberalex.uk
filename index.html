@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="/icon.png" sizes="any">
-  <link rel="apple-touch-icon" href="/icon.png">
+  <!-- FAVICONS / APP ICONS -->
+  <!-- 32px+64px for browser tabs -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/z-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="/icons/z-64.png">
+  <!-- Fallback favicon.ico if you want -->
+  <link rel="icon" href="/favicon.ico">
+
+  <!-- iOS / Android app icon -->
+  <link rel="apple-touch-icon" href="/icons/z-192.png">
   <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#020313">
+
   <title>Zilchy.link – Almost no link</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Zilchy.link – tiny, hand-crafted short links. Almost no link." />
@@ -47,14 +56,13 @@
       overflow-x: hidden;
     }
 
-    /* Neon pipes background */
+    /* Neon grid background */
     body.page::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -1;
+      z-index: -2;
       background-image:
-        /* vertical pipes */
         repeating-linear-gradient(
           90deg,
           rgba(91, 255, 234, 0.12) 0px,
@@ -62,7 +70,6 @@
           transparent 1px,
           transparent 90px
         ),
-        /* horizontal pipes */
         repeating-linear-gradient(
           0deg,
           rgba(255, 76, 227, 0.12) 0px,
@@ -77,6 +84,26 @@
       filter: blur(0.4px);
     }
 
+    /* subtle mouse glow overlay */
+    #distort-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background-position: center;
+      mix-blend-mode: screen;
+      transition: background 0.18s ease-out;
+    }
+
+    body.mousemove #distort-overlay {
+      background-image:
+        radial-gradient(
+          circle 180px at var(--mx) var(--my),
+          rgba(91,255,234,0.12) 0%,
+          rgba(255,255,255,0) 70%
+        );
+    }
+
     .page-center {
       display: flex;
       align-items: center;
@@ -87,7 +114,12 @@
       width: 100%;
       max-width: 680px;
       margin: 0 auto;
-      padding: 32px 20px;
+      padding: 32px 20px 24px;
+    }
+
+    /* top block = header + main box */
+    .top-block {
+      margin-bottom: 20px;
     }
 
     /* Branding header */
@@ -95,7 +127,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
 
     .logo-circle {
@@ -342,6 +374,13 @@
       border: 1px solid rgba(15, 23, 42, 0.9);
     }
 
+    #longUrlDisplay {
+      display: block;
+      word-break: break-all;
+      white-space: normal;
+      line-height: 1.3;
+    }
+
     .snippet {
       margin: 0;
       padding: 10px 12px;
@@ -382,88 +421,66 @@
       text-decoration: underline;
       text-shadow: 0 0 6px rgba(255, 76, 227, 0.7);
     }
-    #distort-overlay {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: -1;
-    background-position: center;
-    mix-blend-mode: screen;
-    transition: background 0.18s ease-out;
-  }
-  
-  body.mousemove #distort-overlay {
-    background-image:
-      radial-gradient(
-        circle 180px at var(--mx) var(--my), 
-        rgba(91,255,234,0.12) 0%, 
-        rgba(255,255,255,0) 70%
-      );
-  }
 
+    /* MOBILE / SMALL SCREENS */
     @media (max-width: 800px) {
-    .search-area {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      margin-top: 6px;
-      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-      backdrop-filter: blur(10px);
+      .shell {
+        padding-top: 18px;
+        padding-bottom: 20px;
+      }
+
+      /* header + main box stick together at the top,
+         but keep nice rounding and no weird overlaying */
+      .top-block {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding-top: 6px;
+        margin-bottom: 18px;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 0.96), rgba(2, 3, 19, 0.98));
+        backdrop-filter: blur(10px);
+      }
+
+      .brand {
+        margin-bottom: 16px;
+      }
     }
-  }
-
-#longUrlDisplay {
-  display: block;
-  word-break: break-all;
-  white-space: normal;
-  line-height: 1.3;
-}
-
-@media (max-height: 450px) and (orientation: landscape) {
-  .brand {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    background: rgba(6,10,30,0.95);
-    padding: 10px 14px;
-    backdrop-filter: blur(10px);
-  }
-}
-
-
   </style>
 
 </head>
 <body class="page page-center">
   <div id="distort-overlay"></div>
   <main class="shell">
-    <header class="brand">
-      <div class="logo-circle">Z</div>
-      <div>
-        <h1>Zilchy.link</h1>
-        <p class="tagline">Almost no link.</p>
-      </div>
-    </header>
-
-    <!-- MAIN INPUT -->
-    <section class="search-area">
-      <form id="mainForm" autocomplete="off">
-        <input
-          id="mainInput"
-          type="text"
-          inputmode="latin"
-          placeholder="Enter The Code Provided..."
-        />
-
-        <div class="button-row">
-          <button type="submit" class="btn-primary" id="goBtn">Go</button>
+    <div class="top-block">
+      <header class="brand">
+        <div class="logo-circle">Z</div>
+        <div>
+          <h1>Zilchy.link</h1>
+          <p class="tagline">Almost no link.</p>
         </div>
-      </form>
+      </header>
 
-      <p class="hint">
-        Zilchy.link is a private, invite-only short-link service. Links are hand-curated for reliability and safety.
-      </p>
-    </section>
+      <!-- MAIN INPUT -->
+      <section class="search-area">
+        <form id="mainForm" autocomplete="off">
+          <input
+            id="mainInput"
+            type="text"
+            inputmode="latin"
+            placeholder="Enter The Code Provided..."
+          />
+
+          <div class="button-row">
+            <button type="submit" class="btn-primary" id="goBtn">Go</button>
+          </div>
+        </form>
+
+        <p class="hint">
+          Zilchy.link is a private, invite-only short-link service. Links are hand-curated for reliability and safety.
+        </p>
+      </section>
+    </div>
 
     <!-- EXPANDING RESULT PANEL -->
     <section id="resultPanel" class="status" hidden>
@@ -542,10 +559,6 @@
     const goBtn = document.getElementById('goBtn');
     const resultPanel = document.getElementById('resultPanel');
 
-        // Put the caret straight into the main box on load
-    input.focus();
-
-
     const longUrlDisplay = document.getElementById('longUrlDisplay');
     const codeOut = document.getElementById('codeOut');
     const shortOut = document.getElementById('shortOut');
@@ -617,7 +630,6 @@
 
       let raw = customCodeInput.value.trim();
       if (!raw) {
-        // fall back to generated code
         clearCustomError();
         updateOutputs(lastGeneratedCode, lastUrl);
         return;
@@ -694,7 +706,6 @@
       if (looksLikeUrl(raw)) {
         await handleURL(raw);
       } else {
-        // treat as code
         const code = normalizeCode(raw);
         if (!code) {
           alert('Please use only letters and numbers in codes.');
@@ -751,19 +762,19 @@
       });
     });
 
-  document.addEventListener("mousemove", (e) => {
-  document.body.classList.add("mousemove");
-  document.documentElement.style.setProperty("--mx", e.clientX + "px");
-  document.documentElement.style.setProperty("--my", e.clientY + "px");
-});
+    /* mouse glow */
+    document.addEventListener("mousemove", (e) => {
+      document.body.classList.add("mousemove");
+      document.documentElement.style.setProperty("--mx", e.clientX + "px");
+      document.documentElement.style.setProperty("--my", e.clientY + "px");
+    });
 
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      input.focus({ preventScroll: true });
-    }, 150);
-  });
-
-    
+    /* focus the box on load without jumping mobile view */
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        input.focus({ preventScroll: true });
+      }, 150);
+    });
   </script>
 </body>
 </html>
