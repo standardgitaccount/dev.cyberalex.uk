@@ -2,10 +2,225 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Zilchy.link – Redirecting…</title>
+  <title>Zilchy.link - Redirecting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex" />
-  <link rel="stylesheet" href="/styles.css">
+  <meta name="description" content="Zilchy.link – tiny, hand-crafted short links. Almost no link." />
+
+  <style>
+    :root {
+      --bg: #020313;
+      --card: rgba(6, 10, 30, 0.96);
+      --border-subtle: rgba(148, 163, 184, 0.4);
+      --text-main: #f9fbff;
+      --text-muted: #9ca3af;
+      --accent: #5bffea;          /* neon cyan */
+      --accent-alt: #ff4ce3;      /* neon magenta */
+      --accent-soft: rgba(91, 255, 234, 0.22);
+      --radius-lg: 18px;
+      --shadow-soft: 0 18px 60px rgba(0, 0, 0, 0.85);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      --error: #fb7185;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body.page {
+      position: relative;
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at 0% 0%, #111827 0, #020313 45%, #020008 100%);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    /* Neon pipes background */
+    body.page::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        /* vertical pipes */
+        repeating-linear-gradient(
+          90deg,
+          rgba(91, 255, 234, 0.12) 0px,
+          rgba(91, 255, 234, 0.12) 1px,
+          transparent 1px,
+          transparent 90px
+        ),
+        /* horizontal pipes */
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 76, 227, 0.12) 0px,
+          rgba(255, 76, 227, 0.12) 1px,
+          transparent 1px,
+          transparent 90px
+        ),
+        radial-gradient(circle at 10% 0%, rgba(91, 255, 234, 0.25), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(255, 76, 227, 0.3), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+      filter: blur(0.4px);
+    }
+
+    .page-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    /* Branding header */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .logo-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background:
+        radial-gradient(circle at 0% 0%, #ffffff, #5bffea 40%, #7c3aed 70%, #020617 100%);
+      color: #0b1020;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.16),
+        0 0 25px rgba(91, 255, 234, 0.9);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      margin: 2px 0 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Card containers */
+    .status {
+      background: linear-gradient(135deg, rgba(11, 15, 38, 0.98), rgba(7, 10, 25, 0.98));
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: var(--shadow-soft), 0 0 40px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(91, 255, 234, 0.18), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(255, 76, 227, 0.16), transparent 55%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .status h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.15rem;
+    }
+
+    .message {
+      font-size: 0.95rem;
+      margin: 6px 0 14px;
+    }
+
+    .hint {
+      margin: 8px 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .hint strong {
+      color: var(--text-main);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 0;
+      background: radial-gradient(circle at 0% 0%, #ffffff, #5bffea 40%, #22d3ee 70%);
+      color: #020617;
+      font-weight: 650;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 1px rgba(148, 163, 184, 0.4),
+        0 12px 28px rgba(34, 211, 238, 0.7);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1.5px);
+      box-shadow:
+        0 0 0 1px rgba(148, 163, 184, 0.6),
+        0 18px 38px rgba(34, 211, 238, 0.95);
+      filter: brightness(1.05);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow:
+        0 0 0 1px rgba(148, 163, 184, 0.7),
+        0 8px 18px rgba(34, 211, 238, 0.8);
+      filter: brightness(0.97);
+    }
+
+    .footer {
+      margin-top: 18px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--accent-alt);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      text-shadow: 0 0 6px rgba(255, 76, 227, 0.7);
+    }
+  </style>
 </head>
 <body class="page page-center">
   <main class="shell">
@@ -17,61 +232,85 @@
       </div>
     </header>
 
-    <section id="status" class="status">
-      <p>Working out where <code id="codeDisplay"></code> should go…</p>
+    <section class="status">
+      <h2 id="statusTitle">Looking up that Zilchy code…</h2>
+      <p class="message" id="statusMessage">
+        Sit tight for a moment while we see if this code exists.
+      </p>
+
+      <p class="hint" id="codeHint" style="display:none;">
+        You tried: <strong id="codeDisplay"></strong>
+      </p>
+
+      <a href="/" class="btn-primary" id="homeBtn">Back to homepage</a>
+
+      <p class="hint" id="extraHint">
+        If this takes too long, you can always return to the homepage.
+      </p>
     </section>
 
     <footer class="footer">
-      <small>If this takes too long, go back to the <a href="/">homepage</a>.</small>
+      <small>© <span id="year"></span> Zilchy.link · Hand-curated short links · Open Source Software · Part of the
+        <a href="https://www.cyberalex.uk">cyberalex</a> umbrella</small>
     </footer>
   </main>
 
   <script>
-    const statusEl = document.getElementById('status');
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const statusTitle = document.getElementById('statusTitle');
+    const statusMessage = document.getElementById('statusMessage');
+    const codeHint = document.getElementById('codeHint');
     const codeDisplay = document.getElementById('codeDisplay');
+    const extraHint = document.getElementById('extraHint');
 
-    // Extract code from /something
-    const path = window.location.pathname.replace(/^\/+/, '');
-    const codeRaw = (path.split('/')[0] || '').trim();
-    const code = codeRaw.toLowerCase().replace(/[^0-9a-z]/g, '');
+    const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
 
-    codeDisplay.textContent = code || '(no code)';
-
-    if (!code || code.length !== 4) {
-      statusEl.innerHTML = `
-        <p>Hmm… that doesn't look like a valid Zilchy code.</p>
-        <p>Codes are 4 characters long and use numbers and letters only.</p>
-        <p><a href="/">Try again on the homepage</a>.</p>
-      `;
-    } else {
-      // Look up in urls.json
-      fetch('/urls.json', { cache: 'no-store' })
-        .then(r => {
-          if (!r.ok) throw new Error('Failed to load URL map');
-          return r.json();
-        })
-        .then(map => {
-          const target = map[code];
-          if (target) {
-            statusEl.innerHTML = `<p>Found it! Redirecting you to <code>${target}</code>…</p>`;
-            // Use replace so Zilchy link doesn't stay in history
-            window.location.replace(target);
-          } else {
-            statusEl.innerHTML = `
-              <p>We couldn't find a link for <code>${code}</code>.</p>
-              <p>It may have expired or never existed.</p>
-              <p><a href="/">Go back to the homepage</a>.</p>
-            `;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          statusEl.innerHTML = `
-            <p>Something went wrong while looking up this code.</p>
-            <p>Please <a href="/">try again from the homepage</a>.</p>
-          `;
-        });
+    function normalizeCode(raw) {
+      return raw.toLowerCase().replace(/[^0-9a-z]/g, '');
     }
+
+    async function tryResolveCode() {
+      const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      const code = normalizeCode(path);
+
+      if (!code || path === '') {
+        // not a code-like path; simple 404
+        statusTitle.textContent = 'Page not found';
+        statusMessage.textContent = "We couldn't find that page. It may have moved or never existed.";
+        extraHint.textContent = 'Head back to the homepage and try a different code or URL.';
+        return;
+      }
+
+      codeHint.style.display = 'block';
+      codeDisplay.textContent = code;
+
+      try {
+        const res = await fetch('/urls.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Cannot load urls.json');
+        const map = await res.json();
+
+        if (Object.prototype.hasOwnProperty.call(map, code)) {
+          // Found – redirect
+          statusTitle.textContent = 'Found it – redirecting…';
+          statusMessage.textContent = 'Your Zilchy link exists. Taking you to the destination now.';
+          window.location.replace(map[code]);
+          return;
+        }
+
+        // No match
+        statusTitle.textContent = "Hmm… that doesn't look like a valid Zilchy code.";
+        statusMessage.textContent = 'Codes are 4 characters long by default and use numbers and letters only.';
+        extraHint.textContent = 'Check the code and try again from the homepage.';
+      } catch (err) {
+        console.error(err);
+        statusTitle.textContent = 'Something went wrong looking up that code.';
+        statusMessage.textContent = 'The Zilchy directory could not be loaded. Please try again later.';
+        extraHint.textContent = 'If the issue persists, contact the site owner.';
+      }
+    }
+
+    tryResolveCode();
   </script>
 </body>
 </html>
