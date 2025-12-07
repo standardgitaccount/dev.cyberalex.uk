@@ -6,11 +6,6 @@
   <!-- SVG favicon (modern browsers) -->
   <link rel="icon" type="image/png" href="logo.png">
 
-  <!-- (Optional PNG fallbacks if you export them later)
-  <link rel="icon" type="image/png" sizes="192x192" href="/zilchy-icon-192.png">
-  <link rel="apple-touch-icon" href="/zilchy-icon-192.png">
-  -->
-
   <!-- Manifest for future PWA support -->
   <link rel="manifest" href="/manifest.json">
 
@@ -54,13 +49,10 @@
       background: radial-gradient(circle at 0% 0%, #111827 0, #020313 45%, #020008 100%);
       color: var(--text-main);
       overflow-x: hidden;
-
-      /* flex column layout so we can centre the main block nicely */
       display: flex;
       flex-direction: column;
     }
 
-    /* Neon pipes background */
     body.page::before {
       content: "";
       position: fixed;
@@ -88,7 +80,6 @@
       filter: blur(0.4px);
     }
 
-    /* Main content block – vertically centred on desktop when content is short */
     main.shell {
       flex: 1;
       display: flex;
@@ -100,7 +91,6 @@
       padding: 32px 20px;
     }
 
-    /* Branding header */
     .brand {
       display: flex;
       align-items: center;
@@ -145,7 +135,6 @@
       color: var(--text-muted);
     }
 
-    /* Card containers */
     .search-area,
     .status {
       background: linear-gradient(135deg, rgba(11, 15, 38, 0.98), rgba(7, 10, 25, 0.98));
@@ -174,14 +163,12 @@
       margin-bottom: 18px;
     }
 
-    /* MAIN BUTTON ROW */
     .button-row {
       display: flex;
       gap: 10px;
       margin-top: 18px;
     }
 
-    /* Inputs */
     #mainForm input {
       width: 100%;
       padding: 12px 14px;
@@ -236,7 +223,6 @@
       transform: translateY(-1px);
     }
 
-    /* Primary button */
     .btn-primary {
       flex: 0 0 auto;
       padding: 10px 20px;
@@ -270,7 +256,6 @@
       filter: brightness(0.97);
     }
 
-    /* Copy buttons */
     .btn-copy {
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.6);
@@ -333,7 +318,6 @@
       color: var(--error);
     }
 
-    /* Result panel */
     #resultPanel {
       margin-top: 24px;
     }
@@ -382,7 +366,6 @@
       margin-bottom: 6px;
     }
 
-    /* Long URL wrapping */
     #longUrlDisplay {
       display: block;
       max-width: 100%;
@@ -391,7 +374,6 @@
       line-height: 1.3;
     }
 
-    /* Footer */
     .footer {
       margin-top: 18px;
       font-size: 0.8rem;
@@ -409,7 +391,6 @@
       text-shadow: 0 0 6px rgba(255, 76, 227, 0.7);
     }
 
-    /* Distortion overlay highlight */
     #distort-overlay {
       position: fixed;
       inset: 0;
@@ -429,7 +410,6 @@
         );
     }
 
-    /* BACK BUTTON (mobile only) */
     .btn-back {
       margin: 18px auto 0;
       padding: 10px 18px;
@@ -455,14 +435,13 @@
       box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
     }
 
-    /* Hide back button on bigger screens */
     @media (min-width: 768px) {
       .btn-back {
         display: none;
       }
     }
 
-    /* QR code section */
+    /* QR section */
     .qr-wrapper {
       display: flex;
       flex-wrap: wrap;
@@ -513,23 +492,20 @@
       padding: 10px;
       border-radius: 10px;
       background:
-        /* grid lines */
         repeating-linear-gradient(
           90deg,
-          rgba(91, 255, 234, 0.22) 0px,
-          rgba(91, 255, 234, 0.22) 1px,
+          rgba(91, 255, 234, 0.16) 0px,
+          rgba(91, 255, 234, 0.16) 1px,
           transparent 1px,
           transparent 36px
         ),
         repeating-linear-gradient(
           0deg,
-          rgba(148, 163, 184, 0.15) 0px,
-          rgba(148, 163, 184, 0.15) 1px,
+          rgba(148, 163, 184, 0.18) 0px,
+          rgba(148, 163, 184, 0.18) 1px,
           transparent 1px,
           transparent 36px
         ),
-        radial-gradient(circle at 0% 0%, rgba(91, 255, 234, 0.2), transparent 65%),
-        radial-gradient(circle at 100% 100%, rgba(255, 76, 227, 0.18), transparent 65%),
         #020313;
     }
 
@@ -560,7 +536,6 @@
       word-break: break-all;
     }
 
-    /* Instructions details */
     .instructions-block {
       margin-top: 20px;
       font-size: 0.9rem;
@@ -602,16 +577,15 @@
   <div id="distort-overlay"></div>
   <main class="shell">
     <header class="brand">
-     <div class="logo-circle">
-      <img src="/logo.png" alt="Zilchy Logo" class="logo-img">
-     </div>
+      <div class="logo-circle">
+        <img src="/logo.png" alt="Zilchy Logo" class="logo-img">
+      </div>
       <div>
         <h1>Zilchy.link</h1>
         <p class="tagline">Almost no link.</p>
       </div>
     </header>
 
-    <!-- MAIN INPUT -->
     <section class="search-area">
       <form id="mainForm" autocomplete="off">
         <input
@@ -630,7 +604,6 @@
       </p>
     </section>
 
-    <!-- EXPANDING RESULT PANEL -->
     <section id="resultPanel" class="status" hidden>
       <h2 class="result-heading">Create a new Zilchy link</h2>
 
@@ -678,12 +651,11 @@
       </p>
 
       <div class="qr-wrapper">
-        <!-- LEFT: tabs SVG/PNG/CODE with copy + download -->
+        <!-- LEFT: plain QR only -->
         <div class="qr-block">
-          <div class="qr-tabs" role="tablist" aria-label="QR format">
+          <div class="qr-tabs" role="tablist" aria-label="QR format (plain)">
             <button type="button" class="qr-tab is-active" data-side="left" data-target="svg">SVG</button>
             <button type="button" class="qr-tab" data-side="left" data-target="png">PNG</button>
-            <button type="button" class="qr-tab" data-side="left" data-target="code">CODE</button>
           </div>
           <div class="qr-display" id="qrLeftDisplay">
             <span class="hint small">Generate a link to see the QR code.</span>
@@ -694,20 +666,23 @@
           </div>
         </div>
 
-        <!-- RIGHT: preview with SVG/PNG tabs + URL label -->
+        <!-- RIGHT: QR with baked label -->
         <div class="qr-block">
-          <div class="qr-tabs" role="tablist" aria-label="QR preview">
+          <div class="qr-tabs" role="tablist" aria-label="QR format (with label)">
             <button type="button" class="qr-tab is-active" data-side="right" data-target="svg">SVG</button>
             <button type="button" class="qr-tab" data-side="right" data-target="png">PNG</button>
           </div>
           <div class="qr-display" id="qrRightDisplay">
             <span class="hint small">Generate a link to see the QR code.</span>
           </div>
+          <div class="qr-actions">
+            <button type="button" class="btn-copy" id="qrRightCopyBtn">Copy SVG</button>
+            <button type="button" class="btn-copy" id="qrRightDownloadBtn">Download SVG</button>
+          </div>
           <p class="qr-url-label" id="qrUrlLabel"></p>
         </div>
       </div>
 
-      <!-- Instructions collapsible -->
       <details class="instructions-block">
         <summary><span>Instructions</span></summary>
         <div class="instructions-inner">
@@ -733,7 +708,6 @@
         </div>
       </details>
 
-      <!-- MOBILE-ONLY BACK BUTTON -->
       <button type="button" class="btn-back" id="backToInput">
         Back to input
       </button>
@@ -745,7 +719,6 @@
     </footer>
   </main>
 
-  <!-- QR generator library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 
   <script>
@@ -765,12 +738,15 @@
     const customCodeInput = document.getElementById('customCode');
     const customCodeHint = document.getElementById('customCodeHint');
 
-    /* QR elements */
     const qrLeftDisplay = document.getElementById('qrLeftDisplay');
     const qrRightDisplay = document.getElementById('qrRightDisplay');
     const qrUrlLabel = document.getElementById('qrUrlLabel');
+
     const qrLeftCopyBtn = document.getElementById('qrLeftCopyBtn');
     const qrLeftDownloadBtn = document.getElementById('qrLeftDownloadBtn');
+    const qrRightCopyBtn = document.getElementById('qrRightCopyBtn');
+    const qrRightDownloadBtn = document.getElementById('qrRightDownloadBtn');
+
     const qrTabs = document.querySelectorAll('.qr-tab');
 
     const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -779,10 +755,13 @@
     let lastGeneratedCode = null;
     let lastUrl = null;
 
-    let currentShortUrlDisplay = null; // zilchy.link/code
-    let currentShortUrlFull = null;    // https://zilchy.link/code
-    let currentSvgString = null;       // themed SVG (with background + label)
-    let currentPngDataUrl = null;      // themed PNG 500×500 (with background + label)
+    let currentShortUrlDisplay = null;
+    let currentShortUrlFull = null;
+
+    let plainSvg = null;
+    let plainPng = null;
+    let labeledSvg = null;
+    let labeledPng = null;
 
     function randomCode() {
       let out = '';
@@ -819,7 +798,6 @@
     function renderSide(side) {
       const target = getActiveTarget(side);
       const display = side === 'left' ? qrLeftDisplay : qrRightDisplay;
-
       if (!display) return;
 
       if (!currentShortUrlFull) {
@@ -827,26 +805,24 @@
         return;
       }
 
+      const svg = side === 'left' ? plainSvg : labeledSvg;
+      const png = side === 'left' ? plainPng : labeledPng;
+
       if (target === 'svg') {
-        if (currentSvgString) {
-          display.innerHTML = currentSvgString;
+        if (svg) {
+          display.innerHTML = svg;
         } else {
           display.innerHTML = '<span class="hint small">Generating SVG…</span>';
         }
       } else if (target === 'png') {
-        if (currentPngDataUrl) {
+        if (png) {
           display.innerHTML =
-            '<img src="' + currentPngDataUrl + '" alt="QR code for this Zilchy link">';
-        } else if (currentSvgString) {
+            '<img src="' + png + '" alt="QR code for this Zilchy link">';
+        } else if (svg) {
           display.innerHTML = '<span class="hint small">Generating PNG…</span>';
         } else {
           display.innerHTML = '<span class="hint small">Generating…</span>';
         }
-      } else if (target === 'code' && side === 'left') {
-        const txt = currentShortUrlDisplay || '';
-        display.innerHTML = txt
-          ? '<code>' + txt + '</code>'
-          : '<span class="hint small">No code yet.</span>';
       }
     }
 
@@ -855,26 +831,33 @@
       renderSide('right');
     }
 
-    function updateLeftButtons() {
+    function updateLeftButtonLabels() {
       const t = getActiveTarget('left');
       if (!qrLeftCopyBtn || !qrLeftDownloadBtn) return;
-
-      if (t === 'svg') {
-        qrLeftCopyBtn.textContent = 'Copy SVG';
-        qrLeftDownloadBtn.textContent = 'Download SVG';
-      } else if (t === 'png') {
+      if (t === 'png') {
         qrLeftCopyBtn.textContent = 'Copy PNG';
         qrLeftDownloadBtn.textContent = 'Download PNG';
-      } else if (t === 'code') {
-        qrLeftCopyBtn.textContent = 'Copy code';
-        qrLeftDownloadBtn.textContent = 'Download code';
+      } else {
+        qrLeftCopyBtn.textContent = 'Copy SVG';
+        qrLeftDownloadBtn.textContent = 'Download SVG';
       }
     }
 
-    function buildThemedSvg(rawSvg, labelText) {
-      // Try to detect QR size from viewBox; fallback if needed
+    function updateRightButtonLabels() {
+      const t = getActiveTarget('right');
+      if (!qrRightCopyBtn || !qrRightDownloadBtn) return;
+      if (t === 'png') {
+        qrRightCopyBtn.textContent = 'Copy PNG';
+        qrRightDownloadBtn.textContent = 'Download PNG';
+      } else {
+        qrRightCopyBtn.textContent = 'Copy SVG';
+        qrRightDownloadBtn.textContent = 'Download SVG';
+      }
+    }
+
+    function buildLabeledSvg(baseSvg, labelText) {
       let qrSize = 256;
-      const vbMatch = rawSvg.match(/viewBox="([^"]+)"/i);
+      const vbMatch = baseSvg.match(/viewBox="([^"]+)"/i);
       if (vbMatch) {
         const parts = vbMatch[1].split(/\s+/);
         if (parts.length === 4) {
@@ -882,7 +865,7 @@
           if (!Number.isNaN(s)) qrSize = s;
         }
       } else {
-        const wMatch = rawSvg.match(/width="(\d+)"/i);
+        const wMatch = baseSvg.match(/width="(\d+)"/i);
         if (wMatch) {
           const s = parseFloat(wMatch[1]);
           if (!Number.isNaN(s)) qrSize = s;
@@ -890,7 +873,7 @@
       }
 
       const totalHeight = qrSize + 48;
-      const inner = rawSvg
+      const inner = baseSvg
         .replace(/^<\?xml[^>]*>/i, '')
         .replace(/^<!DOCTYPE[^>]*>/i, '')
         .replace(/^<svg[^>]*>/i, '')
@@ -903,15 +886,7 @@
 
       return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${qrSize}" height="${totalHeight}" viewBox="0 0 ${qrSize} ${totalHeight}">
-  <defs>
-    <pattern id="gridLines" width="36" height="36" patternUnits="userSpaceOnUse">
-      <path d="M0 0 L0 36" stroke="#5bffea" stroke-opacity="0.22" stroke-width="1"/>
-      <path d="M0 0 L36 0" stroke="#94a3b8" stroke-opacity="0.15" stroke-width="1"/>
-    </pattern>
-  </defs>
   <rect width="100%" height="100%" fill="#020313"/>
-  <rect width="100%" height="${qrSize}" fill="url(#gridLines)"/>
-  <rect width="100%" height="${qrSize}" fill="#020313" fill-opacity="0.85"/>
   ${inner}
   <text x="50%" y="${qrSize + 26}" text-anchor="middle" fill="#e5e7eb"
         font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -943,48 +918,52 @@
       img.src = url;
     }
 
-    function updateQrCode(fullShortUrl) {
-      currentShortUrlFull = fullShortUrl;
-
+    function generateQrAssets(fullShortUrl) {
       if (!window.QRCode) {
-        if (qrLeftDisplay) qrLeftDisplay.innerHTML = placeholderHtml();
-        if (qrRightDisplay) qrRightDisplay.innerHTML = placeholderHtml();
+        qrLeftDisplay.innerHTML = placeholderHtml();
+        qrRightDisplay.innerHTML = placeholderHtml();
         return;
       }
 
-      currentSvgString = null;
-      currentPngDataUrl = null;
+      plainSvg = null;
+      plainPng = null;
+      labeledSvg = null;
+      labeledPng = null;
       refreshQrDisplays();
 
-      // Base QR -> SVG
       QRCode.toString(
         fullShortUrl,
         {
           type: 'svg',
           margin: 1,
           color: {
-            dark: '#5bffea',
-            light: '#020313'
+            dark: '#94a3b8',   // slate-ish modules
+            light: '#020313'   // deep background
           }
         },
         function (err, baseSvg) {
           if (err) {
-            console.error('Error creating base SVG QR', err);
+            console.error('Error creating SVG QR', err);
             return;
           }
 
-          const label = currentShortUrlDisplay || fullShortUrl.replace(/^https?:\/\//i, '');
-          const themedSvg = buildThemedSvg(baseSvg, label);
-          currentSvgString = themedSvg;
-          refreshQrDisplays();
-
-          // Now build PNG from the themed SVG
-          buildPngFromSvg(themedSvg, function (dataUrl) {
-            if (dataUrl) {
-              currentPngDataUrl = dataUrl;
-              refreshQrDisplays();
-            }
+          // Plain SVG/PNG (left)
+          plainSvg = baseSvg;
+          buildPngFromSvg(baseSvg, function (pngUrl) {
+            plainPng = pngUrl;
+            refreshQrDisplays();
           });
+
+          // Labelled SVG/PNG (right)
+          const label = currentShortUrlDisplay || fullShortUrl.replace(/^https?:\/\//i, '');
+          const labelled = buildLabeledSvg(baseSvg, label);
+          labeledSvg = labelled;
+          buildPngFromSvg(labelled, function (pngUrl) {
+            labeledPng = pngUrl;
+            refreshQrDisplays();
+          });
+
+          refreshQrDisplays();
         }
       );
     }
@@ -1000,12 +979,13 @@
       jsonSnippet.textContent = `"${code}": "${url}"`;
 
       currentShortUrlDisplay = shortUrlDisplay;
-      if (qrUrlLabel) {
-        qrUrlLabel.textContent = shortUrlDisplay;
-      }
+      currentShortUrlFull = fullShortUrl;
 
-      updateQrCode(fullShortUrl);
-      updateLeftButtons();
+      if (qrUrlLabel) qrUrlLabel.textContent = shortUrlDisplay;
+
+      generateQrAssets(fullShortUrl);
+      updateLeftButtonLabels();
+      updateRightButtonLabels();
     }
 
     function normalizeCode(raw) {
@@ -1063,7 +1043,7 @@
 
       try {
         new URL(url);
-      } catch (e) {
+      } catch {
         alert('That does not look like a valid URL.');
         return;
       }
@@ -1121,11 +1101,9 @@
       applyCustomFromField();
     });
 
-    /* Copy button wiring for simple text targets (code/short/JSON) */
-    document.querySelectorAll('.btn-copy').forEach((btn) => {
+    /* Copy for simple text targets */
+    document.querySelectorAll('.btn-copy[data-copy-target]').forEach((btn) => {
       const targetId = btn.getAttribute('data-copy-target');
-      if (!targetId) return; // left QR buttons are handled separately
-
       btn.dataset.originalText = btn.textContent;
 
       btn.addEventListener('click', () => {
@@ -1166,7 +1144,7 @@
       });
     });
 
-    /* QR tab switching */
+    /* QR tabs */
     qrTabs.forEach((tab) => {
       tab.addEventListener('click', () => {
         const side = tab.dataset.side;
@@ -1178,11 +1156,11 @@
         tab.classList.add('is-active');
 
         refreshQrDisplays();
-        updateLeftButtons();
+        updateLeftButtonLabels();
+        updateRightButtonLabels();
       });
     });
 
-    /* Helper for QR copy buttons */
     function showCopiedState(btn) {
       const original = btn.dataset.originalText || btn.textContent;
       btn.textContent = 'Copied!';
@@ -1193,58 +1171,54 @@
       }, 1200);
     }
 
-    /* Left QR copy & download (SVG/PNG/CODE) */
+    /* Left copy + download (plain) */
     if (qrLeftCopyBtn) {
       qrLeftCopyBtn.dataset.originalText = qrLeftCopyBtn.textContent;
       qrLeftCopyBtn.addEventListener('click', async () => {
         const t = getActiveTarget('left');
-        if (!t) return;
-
         try {
-          if (t === 'svg') {
-            if (!currentSvgString) return;
+          if (t === 'png') {
+            if (!plainPng) return;
             if (navigator.clipboard && navigator.clipboard.write) {
-              const blob = new Blob([currentSvgString], { type: 'image/svg+xml' });
-              const item = new ClipboardItem({ 'image/svg+xml': blob });
-              await navigator.clipboard.write([item]);
-            } else if (navigator.clipboard && navigator.clipboard.writeText) {
-              await navigator.clipboard.writeText(currentSvgString);
-            }
-          } else if (t === 'png') {
-            if (!currentPngDataUrl) return;
-            if (navigator.clipboard && navigator.clipboard.write) {
-              const res = await fetch(currentPngDataUrl);
+              const res = await fetch(plainPng);
               const blob = await res.blob();
               const item = new ClipboardItem({ 'image/png': blob });
               await navigator.clipboard.write([item]);
             } else if (navigator.clipboard && navigator.clipboard.writeText) {
-              await navigator.clipboard.writeText(currentPngDataUrl);
+              await navigator.clipboard.writeText(plainPng);
             }
-          } else if (t === 'code') {
-            if (!currentShortUrlDisplay) return;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              await navigator.clipboard.writeText(currentShortUrlDisplay);
-            } else {
-              throw new Error('Clipboard unsupported');
+          } else {
+            if (!plainSvg) return;
+            if (navigator.clipboard && navigator.clipboard.write) {
+              const blob = new Blob([plainSvg], { type: 'image/svg+xml' });
+              const item = new ClipboardItem({ 'image/svg+xml': blob });
+              await navigator.clipboard.write([item]);
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(plainSvg);
             }
           }
           showCopiedState(qrLeftCopyBtn);
         } catch (e) {
-          console.error('Could not copy QR asset', e);
-          alert('Could not copy this item. Your browser may not support this type of copying.');
+          console.error('Could not copy plain QR', e);
+          alert('Could not copy this item. Your browser may not support image copying.');
         }
       });
     }
 
     if (qrLeftDownloadBtn) {
-      qrLeftDownloadBtn.dataset.originalText = qrLeftDownloadBtn.textContent;
       qrLeftDownloadBtn.addEventListener('click', () => {
         const t = getActiveTarget('left');
-        if (!t) return;
-
-        if (t === 'svg') {
-          if (!currentSvgString) return;
-          const blob = new Blob([currentSvgString], { type: 'image/svg+xml' });
+        if (t === 'png') {
+          if (!plainPng) return;
+          const a = document.createElement('a');
+          a.href = plainPng;
+          a.download = 'zilchy-link-qr.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else {
+          if (!plainSvg) return;
+          const blob = new Blob([plainSvg], { type: 'image/svg+xml' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -1253,21 +1227,62 @@
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
-        } else if (t === 'png') {
-          if (!currentPngDataUrl) return;
+        }
+      });
+    }
+
+    /* Right copy + download (labelled) */
+    if (qrRightCopyBtn) {
+      qrRightCopyBtn.dataset.originalText = qrRightCopyBtn.textContent;
+      qrRightCopyBtn.addEventListener('click', async () => {
+        const t = getActiveTarget('right');
+        try {
+          if (t === 'png') {
+            if (!labeledPng) return;
+            if (navigator.clipboard && navigator.clipboard.write) {
+              const res = await fetch(labeledPng);
+              const blob = await res.blob();
+              const item = new ClipboardItem({ 'image/png': blob });
+              await navigator.clipboard.write([item]);
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(labeledPng);
+            }
+          } else {
+            if (!labeledSvg) return;
+            if (navigator.clipboard && navigator.clipboard.write) {
+              const blob = new Blob([labeledSvg], { type: 'image/svg+xml' });
+              const item = new ClipboardItem({ 'image/svg+xml': blob });
+              await navigator.clipboard.write([item]);
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(labeledSvg);
+            }
+          }
+          showCopiedState(qrRightCopyBtn);
+        } catch (e) {
+          console.error('Could not copy labelled QR', e);
+          alert('Could not copy this item. Your browser may not support image copying.');
+        }
+      });
+    }
+
+    if (qrRightDownloadBtn) {
+      qrRightDownloadBtn.addEventListener('click', () => {
+        const t = getActiveTarget('right');
+        if (t === 'png') {
+          if (!labeledPng) return;
           const a = document.createElement('a');
-          a.href = currentPngDataUrl;
-          a.download = 'zilchy-link-qr.png';
+          a.href = labeledPng;
+          a.download = 'zilchy-link-qr-labeled.png';
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-        } else if (t === 'code') {
-          if (!currentShortUrlDisplay) return;
-          const blob = new Blob([currentShortUrlDisplay + '\n'], { type: 'text/plain' });
+        } else {
+          if (!labeledSvg) return;
+          const blob = new Blob([labeledSvg], { type: 'image/svg+xml' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'zilchy-link-code.txt';
+          a.download = 'zilchy-link-qr-labeled.svg';
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -1276,21 +1291,18 @@
       });
     }
 
-    /* Distortion highlight */
     document.addEventListener("mousemove", (e) => {
       document.body.classList.add("mousemove");
       document.documentElement.style.setProperty("--mx", e.clientX + "px");
       document.documentElement.style.setProperty("--my", e.clientY + "px");
     });
 
-    /* Focus input on load without jumping */
     window.addEventListener("load", () => {
       setTimeout(() => {
         input.focus({ preventScroll: true });
       }, 150);
     });
 
-    /* Back to input button (mobile-only via CSS) – full reload to reset state */
     if (backToInputBtn) {
       backToInputBtn.addEventListener("click", () => {
         window.location.reload();
