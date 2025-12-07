@@ -779,10 +779,10 @@
     let lastGeneratedCode = null;
     let lastUrl = null;
 
-    let currentShortUrlDisplay = null; // e.g. zilchy.link/test
-    let currentShortUrlFull = null;    // e.g. https://zilchy.link/test
-    let currentSvgString = null;
-    let currentPngDataUrl = null;
+    let currentShortUrlDisplay = null; // zilchy.link/code
+    let currentShortUrlFull = null;    // https://zilchy.link/code
+    let currentSvgString = null;       // themed SVG (with background + label)
+    let currentPngDataUrl = null;      // themed PNG 500×500 (with background + label)
 
     function randomCode() {
       let out = '';
@@ -837,8 +837,10 @@
         if (currentPngDataUrl) {
           display.innerHTML =
             '<img src="' + currentPngDataUrl + '" alt="QR code for this Zilchy link">';
-        } else {
+        } else if (currentSvgString) {
           display.innerHTML = '<span class="hint small">Generating PNG…</span>';
+        } else {
+          display.innerHTML = '<span class="hint small">Generating…</span>';
         }
       } else if (target === 'code' && side === 'left') {
         const txt = currentShortUrlDisplay || '';
@@ -869,6 +871,78 @@
       }
     }
 
+    function buildThemedSvg(rawSvg, labelText) {
+      // Try to detect QR size from viewBox; fallback if needed
+      let qrSize = 256;
+      const vbMatch = rawSvg.match(/viewBox="([^"]+)"/i);
+      if (vbMatch) {
+        const parts = vbMatch[1].split(/\s+/);
+        if (parts.length === 4) {
+          const s = parseFloat(parts[3]);
+          if (!Number.isNaN(s)) qrSize = s;
+        }
+      } else {
+        const wMatch = rawSvg.match(/width="(\d+)"/i);
+        if (wMatch) {
+          const s = parseFloat(wMatch[1]);
+          if (!Number.isNaN(s)) qrSize = s;
+        }
+      }
+
+      const totalHeight = qrSize + 48;
+      const inner = rawSvg
+        .replace(/^<\?xml[^>]*>/i, '')
+        .replace(/^<!DOCTYPE[^>]*>/i, '')
+        .replace(/^<svg[^>]*>/i, '')
+        .replace(/<\/svg>\s*$/i, '');
+
+      const safeLabel = (labelText || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${qrSize}" height="${totalHeight}" viewBox="0 0 ${qrSize} ${totalHeight}">
+  <defs>
+    <pattern id="gridLines" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M0 0 L0 36" stroke="#5bffea" stroke-opacity="0.22" stroke-width="1"/>
+      <path d="M0 0 L36 0" stroke="#94a3b8" stroke-opacity="0.15" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="#020313"/>
+  <rect width="100%" height="${qrSize}" fill="url(#gridLines)"/>
+  <rect width="100%" height="${qrSize}" fill="#020313" fill-opacity="0.85"/>
+  ${inner}
+  <text x="50%" y="${qrSize + 26}" text-anchor="middle" fill="#e5e7eb"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="14">${safeLabel}</text>
+</svg>`;
+    }
+
+    function buildPngFromSvg(svgString, callback) {
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = 500;
+        canvas.height = 500;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#020313';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/png');
+        URL.revokeObjectURL(url);
+        callback(dataUrl);
+      };
+      img.onerror = function (e) {
+        console.error('Error rendering PNG from SVG', e);
+        URL.revokeObjectURL(url);
+        callback(null);
+      };
+      img.src = url;
+    }
+
     function updateQrCode(fullShortUrl) {
       currentShortUrlFull = fullShortUrl;
 
@@ -880,11 +954,9 @@
 
       currentSvgString = null;
       currentPngDataUrl = null;
+      refreshQrDisplays();
 
-      if (qrLeftDisplay) qrLeftDisplay.innerHTML = '<span class="hint small">Generating…</span>';
-      if (qrRightDisplay) qrRightDisplay.innerHTML = '<span class="hint small">Generating…</span>';
-
-      // SVG
+      // Base QR -> SVG
       QRCode.toString(
         fullShortUrl,
         {
@@ -895,36 +967,24 @@
             light: '#020313'
           }
         },
-        function (err, svgString) {
+        function (err, baseSvg) {
           if (err) {
-            console.error('Error creating SVG QR', err);
+            console.error('Error creating base SVG QR', err);
             return;
           }
-          currentSvgString = svgString;
-          renderSide('left');
-          renderSide('right');
-        }
-      );
 
-      // PNG
-      QRCode.toDataURL(
-        fullShortUrl,
-        {
-          width: 500,
-          margin: 1,
-          color: {
-            dark: '#5bffea',
-            light: '#020313'
-          }
-        },
-        function (err, dataUrl) {
-          if (err) {
-            console.error('Error creating PNG QR', err);
-            return;
-          }
-          currentPngDataUrl = dataUrl;
-          renderSide('left');
-          renderSide('right');
+          const label = currentShortUrlDisplay || fullShortUrl.replace(/^https?:\/\//i, '');
+          const themedSvg = buildThemedSvg(baseSvg, label);
+          currentSvgString = themedSvg;
+          refreshQrDisplays();
+
+          // Now build PNG from the themed SVG
+          buildPngFromSvg(themedSvg, function (dataUrl) {
+            if (dataUrl) {
+              currentPngDataUrl = dataUrl;
+              refreshQrDisplays();
+            }
+          });
         }
       );
     }
@@ -1110,8 +1170,7 @@
     qrTabs.forEach((tab) => {
       tab.addEventListener('click', () => {
         const side = tab.dataset.side;
-        const target = tab.dataset.target;
-        if (!side || !target) return;
+        if (!side) return;
 
         document
           .querySelectorAll('.qr-tab[data-side="' + side + '"]')
